@@ -12,11 +12,8 @@ from tinytag import TinyTag, TinyTagException
 # ----------------------------------- CONFIGURACION DE SERVIDOR -----------------------------------------
 # ---------------------------- CONFIGURACION PARTE CLIENTE DEL SERVIDOR-------------------------------------
 
-cliente1 = xmlrpc.client.ServerProxy('http://127.0.0.1:9899', allow_none=True)
-cliente2 = xmlrpc.client.ServerProxy('http://127.0.0.1:9898', allow_none=True)
-
-print("\n*****************************BETA NAPSTER RPC*************************************")    
-print("Servidor NAPSTER Secundario escuchando...")
+# cliente1 = xmlrpc.client.ServerProxy('http://127.0.0.1:9899', allow_none=True)
+# cliente2 = xmlrpc.client.ServerProxy('http://127.0.0.1:9898', allow_none=True)
 
 # socket.gethostname
 host1 = "127.0.0.1"
@@ -36,47 +33,76 @@ server1.register_introspection_functions()
 username = ""
 host = ""
 port = 0
-lsDataCli = []
+lsDataClient = []
 lsNameTracks = []
 lsDataTracks = []
 lsTracks = []
 lsFileTracks = []
+
 lsTotalDataCli = []
 lsTotalTracks = []
-numTracks = 0
+numToTracks = 0
 
-# Funcion que recibe los datos de las canciones de los clientes 
-def dowloadDataClient(cliente):
+print("\n*****************************BETA NAPSTER RPC*************************************")    
+print("Servidor NAPSTER Secundario escuchando...")
+
+def listenClientData(username, host, port):
     # Datos del cliente
     print("\n_______________________________________________________________________________________\n")
     print("\nCargando datos de cliente...")
     print(".....")
-    # Recibimos la informacion de los clientes
-    username = cliente.dataClient()
-    lsTracks, numTracks, lsFileTracks = cliente.sendTrack(username) 
-    lsAlbums, numAlbums, lsTracksAlbums, numTracksAlbums = cliente.sendAlbum(username) 
+    lsDataClient.append(username)
+    lsDataClient.append(host)
+    lsDataClient.append(port)
 
+    print("Datos del cliente: ", lsDataClient)
 
     global lsTotalDataCli
-    lsTotalDataCli+=username 
+    # lsTotalDataCli+=lsDataClient
 
-    global lsTotalTracks
-    lsTotalTracks+=lsTracks
-    lsTotalTracks+=lsTracksAlbums
-
-    print(username)
-
+def listenClientSong(lsTracks, numTrack, lsFileTracks):
     # print("\nLISTA ARCHIVOS DE CANCIONES : ", lsFileTracks)            
     print("\nLISTA METADATOS DE CANCIONES: ", lsTracks) 
-    print("\nNUMERO DE CANCIONES: ", numTracks)
-
+    print("\nNUMERO DE CANCIONES: ", numTrack)
+    
+def listenClientAlbum(lsAlbums, numAlbum, lsTracksAlbums, numTrackAlbum):
     # print("\nLISTA DE ALBUMS: ", lsAlbums)
     # print("\nNUMERO DE ALBUMS: ", numAlbums) 
     print("\nLISTA METADATOS DE CANCIONES EN ALBUMS: ", lsTracksAlbums) 
-    print("\nNUMERO DE CANCIONES EN ALBUMS: ", numTracksAlbums)  
+    print("\nNUMERO DE CANCIONES EN ALBUMS: ", numTrackAlbum)  
 
-    print("\nDatos del cliente " + username[0] +" cargados con exito!")
+    print("\nDatos del cliente " + username +" cargados con exito!")
     print("\n______________________________________________________________________________________\n")
+
+# # Funcion que recibe los datos de las canciones de los clientes 
+# def dowloadDataClient(cliente):
+#     # Datos del cliente
+#     print("\n_______________________________________________________________________________________\n")
+#     print("\nCargando datos de cliente...")
+#     print(".....")
+#     # Recibimos la informacion de los clientes
+#     username = cliente.dataClient()
+#     lsTracks, numTracks, lsFileTracks = cliente.sendTrack(username) 
+#     lsAlbums, numAlbums, lsTracksAlbums, numTracksAlbums = cliente.sendAlbum(username) 
+ 
+
+#     global lsTotalTracks
+#     lsTotalTracks+=lsTracks
+#     lsTotalTracks+=lsTracksAlbums
+
+#     print(username)
+
+#     # print("\nLISTA ARCHIVOS DE CANCIONES : ", lsFileTracks)            
+#     print("\nLISTA METADATOS DE CANCIONES: ", lsTracks) 
+#     print("\nNUMERO DE CANCIONES: ", numTracks)
+
+#     # print("\nLISTA DE ALBUMS: ", lsAlbums)
+#     # print("\nNUMERO DE ALBUMS: ", numAlbums) 
+#     print("\nLISTA METADATOS DE CANCIONES EN ALBUMS: ", lsTracksAlbums) 
+#     print("\nNUMERO DE CANCIONES EN ALBUMS: ", numTracksAlbums)  
+
+#     print("\nDatos del cliente " + username[0] +" cargados con exito!")
+#     print("\n______________________________________________________________________________________\n")
 
     
 def searchTrack(song):
@@ -90,21 +116,21 @@ def searchTrack(song):
     print(newSong)
 
 
-# Hilo Responsable de enviar informacion al servidor1
-class clientThread(threading.Thread):
-	def __init__(self):
-		threading.Thread.__init__(self)
+# # Hilo Responsable de enviar informacion al servidor1
+# class clientThread(threading.Thread):
+# 	def __init__(self):
+# 		threading.Thread.__init__(self)
 
-	def run(self):
-        # Ejecutando funciones de servidor  
-         dowloadDataClient(cliente1)
-         dowloadDataClient(cliente2)       
+# 	def run(self):
+#         # Ejecutando funciones de servidor  
+#         #  dowloadDataClient(cliente1)
+#         #  dowloadDataClient(cliente2)       
 
-         print("\nLISTA TOTAL DE CLIENTES EXISTENTES AL SERVIDOR: ", lsTotalDataCli)
-         print("\nNUMERO DE CLIENTES EXISTENTES EN EL SERVIDOR: ", len(lsTotalDataCli))
+#          print("\nLISTA TOTAL DE CLIENTES EXISTENTES AL SERVIDOR: ", lsTotalDataCli)
+#          print("\nNUMERO DE CLIENTES EXISTENTES EN EL SERVIDOR: ", len(lsTotalDataCli))
 
-         print("\nLISTA TOTAL DE CANCIONES EXISTENTES AL SERVIDOR: ", lsTotalTracks)
-         print("\nNUMERO DE CANCIONES EXISTENTES EN EL SERVIDOR: ", len(lsTotalTracks))
+#          print("\nLISTA TOTAL DE CANCIONES EXISTENTES AL SERVIDOR: ", lsTotalTracks)
+#          print("\nNUMERO DE CANCIONES EXISTENTES EN EL SERVIDOR: ", len(lsTotalTracks))
 
          
 # Hilo Responsable de enviar informacion al servidor1
@@ -114,12 +140,15 @@ class serverThread(threading.Thread):
 
 	def run(self):
         # Ejecutando funciones de servidor  
-         server1.register_function(searchTrack)
+         server1.register_function(listenClientData)
+         server1.register_function(listenClientSong)
+         server1.register_function(listenClientAlbum)
+
          print("Servidor Conectado...")
          server1.serve_forever()
 
-clientSend = clientThread()
-clientSend.start()   
+# clientSend = clientThread()
+# clientSend.start()   
 serverSend = serverThread()
 serverSend.start()          
     

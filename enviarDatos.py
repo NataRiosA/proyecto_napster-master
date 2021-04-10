@@ -36,7 +36,7 @@ def sendTrack(username):
                     d = str(temp_track.duration)
                     durationMinute = round(float(d), 2)
                     duration = str(datetime.timedelta(seconds=durationMinute))
-                    file = open("musica\\cliente1\\canciones1" + name, "rb")
+                    file = open("musica\\cliente1\\canciones1\\" + name, "rb")
                     file_data = file.read()
                     lsFileTracks.append(file_data)
                     if file:

@@ -3,7 +3,7 @@ from xmlrpc.server import SimpleXMLRPCRequestHandler
 import xmlrpc.client
 import threading
 import os
-from enviarDatos import sendTrack, sendAlbum
+from enviarDatos1 import sendTrack, sendAlbum
 # Python 3.7
 # Cliente RPC
 
@@ -115,10 +115,10 @@ class clientThread(threading.Thread):
 	def run(self):
          username, host, port = dataClient()
          lsTracks, numTrack, lsFileTracks  = sendTrack(username)
-         lsAlbums, numAlbum, lsTrackAlbums, numTrackAlbum = sendAlbum(username)
+         lsAlbums, numAlbum, lsTrackAlbums, numTrackAlbum, lsFileTracksA = sendAlbum(username)
          cliente.listenClientData(username, host, port)
          cliente.listenClientSong(lsTracks, numTrack, lsFileTracks)
-         cliente.listenClientAlbum(lsAlbums, numAlbum, lsTrackAlbums, numTrackAlbum)
+         cliente.listenClientAlbum(lsAlbums, numAlbum, lsTrackAlbums, numTrackAlbum, lsFileTracksA)
          print("\nSe han compartidos tus archivos locales con el servidor de NAPSTER RPC") 
 
 # # Dependiendo el servidor a que este conectado Ejecuta los hilos 

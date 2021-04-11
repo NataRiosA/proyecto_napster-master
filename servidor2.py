@@ -16,6 +16,7 @@ from tinytag import TinyTag, TinyTagException
 # cliente2 = xmlrpc.client.ServerProxy('http://127.0.0.1:9898', allow_none=True)
 
 # socket.gethostname
+# direcciones para cada cliente
 host1 = "127.0.0.1"
 port1 = 9799
 host2 = "127.0.0.1"
@@ -26,8 +27,17 @@ portTest = 2869
 class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/RPC2',)
 
+def createClient(host, puerto):
+    
+
+    return server
+
+
 server1 = SimpleXMLRPCServer((host1, port1), requestHandler=RequestHandler, allow_none=True) 
 server1.register_introspection_functions()
+
+server2 = SimpleXMLRPCServer((host2, port2), requestHandler=RequestHandler, allow_none=True) 
+server2.register_introspection_functions()
 
 # Variables globales
 username = ""
@@ -65,7 +75,7 @@ def listenClientSong(lsTracks, numTrack, lsFileTracks):
     print("\nLISTA METADATOS DE CANCIONES: ", lsTracks) 
     print("\nNUMERO DE CANCIONES: ", numTrack)
     
-def listenClientAlbum(lsAlbums, numAlbum, lsTracksAlbums, numTrackAlbum):
+def listenClientAlbum(lsAlbums, numAlbum, lsTracksAlbums, numTrackAlbum, lsFileTracksA):
     # print("\nLISTA DE ALBUMS: ", lsAlbums)
     # print("\nNUMERO DE ALBUMS: ", numAlbums) 
     print("\nLISTA METADATOS DE CANCIONES EN ALBUMS: ", lsTracksAlbums) 
@@ -105,8 +115,10 @@ def listenClientAlbum(lsAlbums, numAlbum, lsTracksAlbums, numTrackAlbum):
 #     print("\n______________________________________________________________________________________\n")
 
     
+# Funcion para buscar una cancion
 def searchTrack(song):
     newSong = ""
+# recorre la lista lsTotalTracks e itera cada cancion en track
     for track in lsTotalTracks:
         if track[0] == song:
             newSong = track[0]
@@ -114,6 +126,8 @@ def searchTrack(song):
     if newSong == "":
         print("\nNombre incorrecto. La cancion no se encuentra.")   
     print(newSong)
+
+    return newSong
 
 
 # # Hilo Responsable de enviar informacion al servidor1
@@ -140,16 +154,31 @@ class serverThread(threading.Thread):
 
 	def run(self):
         # Ejecutando funciones de servidor  
+        
+
+        
          server1.register_function(listenClientData)
          server1.register_function(listenClientSong)
          server1.register_function(listenClientAlbum)
+         server1.register_function(searchTrack)
+         server1.handle_request()
+         server1.handle_request()
+         server1.handle_request()
+         print("cerrado")
+            
+         
+         server2.register_function(listenClientData)
+         server2.register_function(listenClientSong)
+         server2.register_function(listenClientAlbum)
+         server2.register_function(searchTrack)
 
          print("Servidor Conectado...")
-         server1.serve_forever()
+         server2.serve_forever()
+
 
 # clientSend = clientThread()
 # clientSend.start()   
-serverSend = serverThread()
-serverSend.start()          
+serverReceive = serverThread()
+serverReceive.start()          
     
          

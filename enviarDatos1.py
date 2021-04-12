@@ -12,7 +12,7 @@ def sendTrack(username):
     lsTracks = []
     lsFileTracks = []
     numTracks = 0
-    data = ""   
+  
     # Este for lee el directorio raiz, sus subcarpetas y archivos. El metodo walk sirve para leer un directorio    
     for root, dirs, files, in os.walk("musica\\cliente1\\canciones1"):
 
@@ -31,8 +31,6 @@ def sendTrack(username):
                     file = open("musica\\cliente1\\canciones1\\" + name, "rb")
                     file_data = file.read(1024)
                     lsFileTracks.append(file_data)
-                    if file:
-                        print("Archivo leido: ", file)
                     file.close()
                     
                     # Creamos una lista con los metadatos de cada cancion y agregamos estas listas a otra lista para tener una matriz de canciones
@@ -50,11 +48,10 @@ def sendTrack(username):
         # file.write(data)
         # file.close()
         # print("HEcho")
-    
-    print("\nLISTA DE CANCIONES: ", lsFileTracks)            
-    print("\nLISTA DE CANCIONES: ", lsTracks) 
-    print("\nNUMERO DE CANCIONES: ", numTracks)
-    print("\nLISTA DE NOMBRES DE CANCIONES: ", lsNameTracks)
+                
+    # print("\nLISTA DE CANCIONES: ", lsTracks) 
+    # print("\nNUMERO DE CANCIONES: ", numTracks)
+    # print("\nLISTA DE NOMBRES DE CANCIONES: ", lsNameTracks)
 
     return lsTracks, numTracks, lsFileTracks  
 
@@ -90,21 +87,19 @@ def sendAlbum(username):
                             file = open("musica\\cliente1\\Albums1\\" + dirName + "\\" + trackName, "rb")
                             file_data = file.read()
                             lsFileTracks.append(file_data)
-                            if file:
-                                print("Archivo leido: ", file)
                             file.close()
 
-                            lsDataTracks = [temp_track.title, temp_track.artist, dirName, duration, temp_track.filesize, username]
+                            lsDataTracks = [temp_track.title, temp_track.artist, duration, temp_track.filesize, username, dirName ]
                             lsTracks.append(lsDataTracks)
                             numTracks += 1
                             
                         except TinyTagException:
                             print("Error. No se puede leer el archivo.")               
 
-    print("\nLISTA DE ALBUMS: ", lsAlbums)
-    print("\nNUMERO DE ALBUMS: ", numAlbums) 
-    print("\nLISTA DE CANCIONES: ", lsTracks) 
-    print("\nNUMERO DE CANCIONES: ", numTracks)     
+    # print("\nLISTA DE ALBUMS: ", lsAlbums)
+    # print("\nNUMERO DE ALBUMS: ", numAlbums) 
+    # print("\nLISTA DE CANCIONES: ", lsTracks) 
+    # print("\nNUMERO DE CANCIONES: ", numTracks)     
  # print("\nLISTA ARCHIVOS EN ALBUM: ", lsFileTracks)              
 
     return lsAlbums, numAlbums, lsTracks, numTracks, lsFileTracks
